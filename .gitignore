@@ -1,0 +1,13 @@
+﻿##############################
+
+## Folders                  ##
+
+##############################
+.idea
+__pycache__
+output
+data
+dist
+images
+build
+conf/models

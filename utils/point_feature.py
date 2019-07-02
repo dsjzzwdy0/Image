@@ -7,7 +7,6 @@ Conduct pair-wise image matching.
 import cv2
 import os
 import numpy as np
-import time
 import queue
 import tensorflow as tf
 from threading import Thread
@@ -86,7 +85,7 @@ class MatcherWrapper(object):
         good_matches = []
         mask = None
 
-        start = time.time()
+        # start = time.time()
         if(cross_check):
             init_matches1 = matcher.knnMatch(feat1, feat2, k=2)
             init_matches2 = matcher.knnMatch(feat2, feat1, k=2)
@@ -111,11 +110,11 @@ class MatcherWrapper(object):
             good_kpts2 = np.array([cv_kpts2[m.trainIdx].pt for m in good_matches])
             _, mask = cv2.findFundamentalMat(good_kpts1, good_kpts2, cv2.RANSAC, 4.0, confidence=0.999)
 
-        end = time.time()
-        print('Time cost in feature match ', end - start)
+        # end = time.time()
+        # print('Time cost in feature match ', end - start)
 
         n_inlier = np.count_nonzero(mask)
-        print(info, 'n_putative', len(good_matches), 'n_inlier', n_inlier)
+        # print(info, 'n_putative', len(good_matches), 'n_inlier', n_inlier)
 
         return good_matches, mask
 
@@ -145,9 +144,8 @@ class DeepExtractor(FeatureExtractor):
         self.sift_extractor.create()
         self.graph = load_frozen_model(self.model_path, print_nodes=False)
 
-
     def detect(self, gray_img):
-        print("SIFT Extractor is Null = ", self.sift_extractor is None)
+        # print("SIFT Extractor is Null = ", self.sift_extractor is None)
         _, cv_kpts1 = self.sift_extractor.detect(gray_img)
 
         self.sess = tf.Session(graph=self.graph)
@@ -155,17 +153,17 @@ class DeepExtractor(FeatureExtractor):
         deep_feat1, cv_kpts1, gray_img1 = self.sift_extractor.extract_deep_features(
             self.sess, gray_img, cv_kpts1, self.batch_size, qtz=True)
 
-        print("Img1 key point size ", len(cv_kpts1), ", feature size ", len((deep_feat1)))
+        # print("Img1 key point size ", len(cv_kpts1), ", feature size ", len((deep_feat1)))
         self.sess.close()
 
         return cv_kpts1, deep_feat1
 
     def get_image_keypnts(self, img, gray_img):
         # detect SIFT keypoints.
-        start = time.time()
+        # start = time.time()
         cv_kpts, des = self.detect(gray_img)
-        end = time.time()
-        print('Time cost in keypoint detection', end - start)
+        # end = time.time()
+        # print('Time cost in keypoint detection', end - start)
         return img, gray_img, cv_kpts, des
 
 
@@ -192,10 +190,10 @@ class FastExtractor(FeatureExtractor):
 
     def get_image_keypnts(self, img, gray_img):
         # detect SIFT keypoints.
-        start = time.time()
+        # start = time.time()
         cv_kpts, des = self.detect(gray_img)
-        end = time.time()
-        print('Time cost in keypoint detection', end - start)
+        # end = time.time()
+        # print('Time cost in keypoint detection', end - start)
         return img, gray_img, cv_kpts, des
 
 
@@ -235,10 +233,10 @@ class OrbExtractor(FeatureExtractor):
 
     def get_image_keypnts(self, img, gray_img):
         # detect SIFT keypoints.
-        start = time.time()
+        # start = time.time()
         cv_kpts, des = self.detect(gray_img)
-        end = time.time()
-        print('Time cost in keypoint detection', end - start)
+        # end = time.time()
+        # print('Time cost in keypoint detection', end - start)
         return img, gray_img, cv_kpts, des
 
 
@@ -259,10 +257,10 @@ class SurfExtractor(FeatureExtractor):
 
     def get_image_keypnts(self, img, gray_img):
         # detect SIFT keypoints.
-        start = time.time()
+        # start = time.time()
         cv_kpts, des = self.detect(gray_img)
-        end = time.time()
-        print('Time cost in keypoint detection', end - start)
+        # end = time.time()
+        # print('Time cost in keypoint detection', end - start)
         return img, gray_img, cv_kpts, des
 
 
@@ -301,11 +299,11 @@ class SiftExtractor(FeatureExtractor):
 
     def get_image_keypnts(self, img, gray_img):
         # detect SIFT keypoints.
-        start = time.time()
+        # start = time.time()
         _, cv_kpts = self.detect(gray_img)
         des = self.compute_desc(img, cv_kpts)
-        end = time.time()
-        print('Time cost in keypoint detection', end - start)
+        # end = time.time()
+        # print('Time cost in keypoint detection', end - start)
         return img, gray_img, cv_kpts, des
 
     def detect(self, gray_img):
@@ -354,7 +352,7 @@ class SiftExtractor(FeatureExtractor):
         gray_img = gray_img.astype(np.float32)
         n_octaves = self.max_octave - self.first_octave + 1
 
-        print("n_octaves number is ", n_octaves)
+        # print("n_octaves number is ", n_octaves)
 
         # create initial image.
         if self.first_octave < 0:
@@ -433,15 +431,15 @@ class SiftExtractor(FeatureExtractor):
         return all_patches
 
     def extract_deep_features(self, sess, gray_img, cv_kpts, batch_size, qtz=True):
-        start = time.time()
+        # start = time.time()
         self.build_pyramid(gray_img)
-        end = time.time()
-        print('Time cost in scale space construction', end - start)
+        # end = time.time()
+        # print('Time cost in scale space construction', end - start)
 
-        start = time.time()
+        # start = time.time()
         all_patches = self.get_patches(cv_kpts)
-        end = time.time()
-        print('Time cost in patch cropping', end - start)
+        # end = time.time()
+        # print('Time cost in patch cropping', end - start)
 
         num_patch = all_patches.shape[0]
 
@@ -466,7 +464,7 @@ class SiftExtractor(FeatureExtractor):
         worker_thread.daemon = True
         worker_thread.start()
 
-        start = time.time()
+        # start = time.time()
         # enqueue
         for i in range(loop_num + 1):
             if i < loop_num:
@@ -478,8 +476,8 @@ class SiftExtractor(FeatureExtractor):
         # wait for extraction.
         worker_thread.join()
 
-        end = time.time()
-        print('Time cost in feature extraction', end - start)
+        # end = time.time()
+        # print('Time cost in feature extraction', end - start)
 
         all_feat = np.concatenate(all_feat, axis=0)
         # quantize output features.

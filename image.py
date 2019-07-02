@@ -8,11 +8,12 @@ import cv2
 
 path = os.path.dirname(os.path.realpath(sys.argv[0]))
 
+
 def main():
     # max_point = 1024
-    # extractor = OrbExtractor()
+    extractor = OrbExtractor()
     # extractor = SiftExtractor(n_sample=1024)
-    extractor = DeepExtractor(os.path.join(path, 'data/geodesc.pb'))
+    # extractor = DeepExtractor(os.path.join(path, 'data/geodesc.pb'))
     extractor.create()
     matcher = MatcherWrapper()
 
@@ -21,7 +22,7 @@ def main():
     image1 = cv2.imread('images/tu1.jpg')
     image2 = cv2.imread('images/tu2.jpg')
 
-    image_result = feature_matcher.match(image1, image2)
+    image_result = feature_matcher.compute_match_image(image1, image2)
     cv2.imshow('display', image_result)
     cv2.waitKey(0)
     cv2.destroyAllWindows

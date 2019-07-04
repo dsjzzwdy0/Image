@@ -23,19 +23,18 @@ class FeatureMatcher:
         self.extractor = extractor
         self.matcher = matcher
 
-    def compute_match_image(self, image1, image2, dist_type=cv2.NORM_L2, ratio=0.70, cross_check=True, ransac=True):
-        gray_img1 = cv2.cvtColor(image1, cv2.COLOR_RGB2GRAY)
-        gray_img2 = cv2.cvtColor(image2, cv2.COLOR_RGB2GRAY)
-
+    def extract_image_feature(self, image):
         start = time.time()
-        img1, gray_img1, cv_kpts1, feat1 = self.extractor.get_image_keypnts(image1, gray_img1)
+        gray_img = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
+        img1, gray_img, cv_kpts1, feat1 = self.extractor.get_image_keypnts(image, gray_img)
         end = time.time()
         print('Extract ', len(cv_kpts1), ' key points and features, total spend time is ', round(end - start, 3), 's.')
 
-        start = time.time()
-        img2, gray_img2, cv_kpts2, feat2 = self.extractor.get_image_keypnts(image2, gray_img2)
-        end = time.time()
-        print('Extract ', len(cv_kpts2), ' key points and features, total spend time is ', round(end - start, 3), 's.')
+        return img1, gray_img, cv_kpts1, feat1
+
+    def compute_match_image(self, image1, image2, dist_type=cv2.NORM_L2, ratio=0.70, cross_check=True, ransac=True):
+        img1, gray_img1, cv_kpts1, feat1 = self.extract_image_feature(image1)
+        img2, gray_img2, cv_kpts2, feat2 = self.extract_image_feature(image2)
 
         start = time.time()
         display, match_num = draw_match(self.matcher, img1, img2, feat1, feat2, cv_kpts1, cv_kpts2, dist_type,

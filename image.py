@@ -11,9 +11,9 @@ path = os.path.dirname(os.path.realpath(sys.argv[0]))
 
 def main():
     # max_point = 1024
-    extractor = OrbExtractor()
+    # extractor = OrbExtractor()
     # extractor = SiftExtractor(n_sample=1024)
-    # extractor = DeepExtractor(os.path.join(path, 'data/geodesc.pb'))
+    extractor = DeepExtractor(os.path.join(path, 'data/geodesc.pb'))
     extractor.create()
     matcher = MatcherWrapper()
 

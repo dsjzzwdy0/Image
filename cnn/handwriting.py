@@ -29,6 +29,8 @@ def compute_accuracy(sess, prediction, xs, test_xs, test_ys, keep_prob):
     return result
 
 
+model_path = 'd:/python/data/model_l6.ckpt';
+
 # 下载mnist数据
 start = time.time()
 mnist = input_data.read_data_sets('D:/Python/data/mnist', one_hot=True)
@@ -84,8 +86,8 @@ def create_l6_net():
 
     # 卷积层一
     # patch为5*5，in_size为1，即图像的厚度，如果是彩色，则为3，32是out_size，输出的大小-》32个卷积和（滤波器）
-    W_conv1 = weight_variable([5, 5, 1, 32])
-    b_conv1 = bias_variable([32])
+    W_conv1 = weight_variable([5, 5, 1, 16])
+    b_conv1 = bias_variable([16])
 
     # ReLU操作，输出大小为28*28*32
     h_conv1 = tf.nn.relu(conv2d(x_image, W_conv1) + b_conv1)
@@ -95,8 +97,8 @@ def create_l6_net():
 
     # 卷积层二
     # patch为5*5，in_size为32，即图像的厚度，64是out_size，输出的大小
-    W_conv2 = weight_variable([5, 5, 32, 64])
-    b_conv2 = bias_variable([64])
+    W_conv2 = weight_variable([5, 5, 16, 32])
+    b_conv2 = bias_variable([32])
 
     # ReLU操作，输出大小为14*14*64
     h_conv2 = tf.nn.relu(conv2d(h_pool1, W_conv2) + b_conv2)
@@ -105,11 +107,11 @@ def create_l6_net():
     h_pool2 = max_pool_2x2(h_conv2)
 
     # 全连接层一
-    W_fc1 = weight_variable([7 * 7 * 64, 1024])
+    W_fc1 = weight_variable([7 * 7 * 32, 512])
     b_fc1 = bias_variable([1024])
 
     # 输入数据变换
-    h_pool2_flat = tf.reshape(h_pool2, [-1, 7 * 7 * 64])  # 整形成m*n,列n为7*7*64
+    h_pool2_flat = tf.reshape(h_pool2, [-1, 7 * 7 * 32])  # 整形成m*n,列n为7*7*64
 
     # 进行全连接操作
     h_fc1 = tf.nn.relu(tf.matmul(h_pool2_flat, W_fc1) + b_fc1)  # tf.matmul
@@ -118,7 +120,7 @@ def create_l6_net():
     h_fc1_drop = tf.nn.dropout(h_fc1, keep_prob)
 
     # 全连接层二
-    W_fc2 = weight_variable([1024, 10])
+    W_fc2 = weight_variable([512, 10])
     b_fc2 = bias_variable([10])
     # 预测
     prediction = tf.nn.softmax(tf.matmul(h_fc1_drop, W_fc2) + b_fc2)

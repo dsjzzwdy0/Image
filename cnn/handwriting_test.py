@@ -37,7 +37,7 @@ def get_label_name(label):
 
 with tf.Session() as sess:
     start = time.time()
-    saver.restore(sess,"d:/python/data/model.ckpt")
+    saver.restore(sess, model_path)
     end = time.time()
     print("Restore CNN spend time is", (end - start), "s.")
 

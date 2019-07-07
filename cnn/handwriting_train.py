@@ -26,4 +26,4 @@ for i in range(1000):
 
 
 saver = tf.train.Saver()  # 定义saver
-saver.save(sess, 'd:/python/data/model.ckpt')  # 模型储存位置
+saver.save(sess, model_path)  # 模型储存位置

@@ -5,4 +5,4 @@ Conduct pair-wise image matching.
 """
 
 
-path = 'd:/index/cnn/'
+path = 'd:/index/handwriting/'

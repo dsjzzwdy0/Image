@@ -5,7 +5,7 @@
 # software: PyCharm Community Edition
 
 import tensorflow as tf
-from cnn.handwriting import *
+from handwriting.handwriting import *
 
 xs, ys, keep_prob, train_step, prediction = create_l5_net()
 

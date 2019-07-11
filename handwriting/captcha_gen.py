@@ -5,7 +5,7 @@ from PIL import Image
 import random
 import cv2
 import os
-from cnn import *
+from handwriting import *
 
 # 验证码中的字符
 number = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']

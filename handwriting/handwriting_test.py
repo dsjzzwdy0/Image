@@ -5,7 +5,7 @@
 # software: PyCharm Community Edition
 import time
 import tensorflow as tf
-from cnn.handwriting import *
+from handwriting.handwriting import *
 
 
 start = time.time()

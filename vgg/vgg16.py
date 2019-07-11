@@ -8,9 +8,11 @@
 
 import tensorflow as tf
 import numpy as np
+from vgg import *
+
 
 # 加载预训练模型
-data_dict = np.load('./vgg16.npy', encoding='latin1').item()
+data_dict = np.load(pre_vgg16_model_path, allow_pickle=True, encoding='latin1').item()
 
 
 # 打印每层信息
@@ -28,11 +30,11 @@ def print_layer(t):
 """
 
 
-def conv(x, d_out, name, fineturn=False, xavier=False):
+def conv(x, d_out, name, fine_tuning=False, xavier=False):
     d_in = x.get_shape()[-1].value
     with tf.name_scope(name) as scope:
         # Fine-tuning
-        if fineturn:
+        if fine_tuning:
             kernel = tf.constant(data_dict[name][0], name="weights")
             bias = tf.constant(data_dict[name][1], name="bias")
             print("fineturn")
@@ -76,10 +78,10 @@ def maxpool(x, name):
 """
 
 
-def fc(x, n_out, name, fineturn=False, xavier=False):
+def fc(x, n_out, name, fine_tuning=False, xavier=False):
     n_in = x.get_shape()[-1].value
     with tf.name_scope(name) as scope:
-        if fineturn:
+        if fine_tuning:
             weight = tf.constant(data_dict[name][0], name="weights")
             bias = tf.constant(data_dict[name][1], name="bias")
             print("fineturn")
@@ -112,27 +114,27 @@ def VGG16(images, _dropout, n_cls):
         卷积层使用预训练模型中的参数
         全连接层使用xavier类型初始化
     """
-    conv1_1 = conv(images, 64, 'conv1_1', fineturn=True)
-    conv1_2 = conv(conv1_1, 64, 'conv1_2', fineturn=True)
+    conv1_1 = conv(images, 64, 'conv1_1', fine_tuning=True)
+    conv1_2 = conv(conv1_1, 64, 'conv1_2', fine_tuning=True)
     pool1 = maxpool(conv1_2, 'pool1')
 
-    conv2_1 = conv(pool1, 128, 'conv2_1', fineturn=True)
-    conv2_2 = conv(conv2_1, 128, 'conv2_2', fineturn=True)
+    conv2_1 = conv(pool1, 128, 'conv2_1', fine_tuning=True)
+    conv2_2 = conv(conv2_1, 128, 'conv2_2', fine_tuning=True)
     pool2 = maxpool(conv2_2, 'pool2')
 
-    conv3_1 = conv(pool2, 256, 'conv3_1', fineturn=True)
-    conv3_2 = conv(conv3_1, 256, 'conv3_2', fineturn=True)
-    conv3_3 = conv(conv3_2, 256, 'conv3_3', fineturn=True)
+    conv3_1 = conv(pool2, 256, 'conv3_1', fine_tuning=True)
+    conv3_2 = conv(conv3_1, 256, 'conv3_2', fine_tuning=True)
+    conv3_3 = conv(conv3_2, 256, 'conv3_3', fine_tuning=True)
     pool3 = maxpool(conv3_3, 'pool3')
 
-    conv4_1 = conv(pool3, 512, 'conv4_1', fineturn=True)
-    conv4_2 = conv(conv4_1, 512, 'conv4_2', fineturn=True)
-    conv4_3 = conv(conv4_2, 512, 'conv4_3', fineturn=True)
+    conv4_1 = conv(pool3, 512, 'conv4_1', fine_tuning=True)
+    conv4_2 = conv(conv4_1, 512, 'conv4_2', fine_tuning=True)
+    conv4_3 = conv(conv4_2, 512, 'conv4_3', fine_tuning=True)
     pool4 = maxpool(conv4_3, 'pool4')
 
-    conv5_1 = conv(pool4, 512, 'conv5_1', fineturn=True)
-    conv5_2 = conv(conv5_1, 512, 'conv5_2', fineturn=True)
-    conv5_3 = conv(conv5_2, 512, 'conv5_3', fineturn=True)
+    conv5_1 = conv(pool4, 512, 'conv5_1', fine_tuning=True)
+    conv5_2 = conv(conv5_1, 512, 'conv5_2', fine_tuning=True)
+    conv5_3 = conv(conv5_2, 512, 'conv5_3', fine_tuning=True)
     pool5 = maxpool(conv5_3, 'pool5')
 
     '''

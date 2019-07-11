@@ -5,7 +5,7 @@ import cv2
 import os
 import random
 import time
-from cnn import *
+from handwriting import *
 
 # number
 number = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']

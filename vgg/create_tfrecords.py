@@ -10,10 +10,8 @@ import os
 import tensorflow as tf
 from PIL import Image
 import sys
+from vgg import *
 
-
-imgpath = 'D:/Python/data/flowers/17flowers/'
-save_path = 'D:/Python/data/flowers/train.tfrecords'
 
 def creat_tf(imgpath, save_path):
     classes = os.listdir(imgpath)
@@ -38,7 +36,7 @@ def creat_tf(imgpath, save_path):
 
 def read_example():
     # 简单的读取例子：
-    for serialized_example in tf.python_io.tf_record_iterator(save_path):
+    for serialized_example in tf.python_io.tf_record_iterator(tf_records_path):
         example = tf.train.Example()
         example.ParseFromString(serialized_example)
 
@@ -49,6 +47,6 @@ def read_example():
 
 
 if __name__ == '__main__':
-    creat_tf(imgpath, save_path)
+    creat_tf(image_source_path, tf_records_path)
     # read_example()
 

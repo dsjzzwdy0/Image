@@ -17,7 +17,7 @@ data_dict = np.load(pre_vgg16_model_path, allow_pickle=True, encoding='latin1').
 
 # 打印每层信息
 def print_layer(t):
-    print(t.op.name, ' ', t.get_shape().as_list(), '\n')
+    print(t.op.name, ' ', t.get_shape().as_list())
 
 
 # 定义卷积层
@@ -37,7 +37,7 @@ def conv(x, d_out, name, fine_tuning=False, xavier=False):
         if fine_tuning:
             kernel = tf.constant(data_dict[name][0], name="weights")
             bias = tf.constant(data_dict[name][1], name="bias")
-            print("fineturn")
+            print("finetuning")
 
         elif not xavier:
             kernel = tf.Variable(tf.truncated_normal([3, 3, d_in, d_out], stddev=0.1), name='weights')
@@ -84,7 +84,7 @@ def fc(x, n_out, name, fine_tuning=False, xavier=False):
         if fine_tuning:
             weight = tf.constant(data_dict[name][0], name="weights")
             bias = tf.constant(data_dict[name][1], name="bias")
-            print("fineturn")
+            print("finetuning")
 
         elif not xavier:
             weight = tf.Variable(tf.truncated_normal([n_in, n_out], stddev=0.01), name='weights')

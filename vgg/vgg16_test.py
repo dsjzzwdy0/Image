@@ -4,8 +4,6 @@
 # datetime:2019/7/8 13:14
 # software: PyCharm Community Edition
 
-# coding=utf-8
-
 import tensorflow as tf
 import numpy as np
 import pdb
@@ -13,6 +11,7 @@ from datetime import datetime
 from vgg.vgg16 import *
 import cv2
 import os
+import time
 
 
 def test(path):
@@ -22,25 +21,31 @@ def test(path):
     score = tf.nn.softmax(output)
     f_cls = tf.argmax(score, 1)
 
-    with tf.InteractiveSession() as sess:
+    with tf.Session() as sess:
         sess.run(tf.global_variables_initializer())
         saver = tf.train.Saver()
 
         # 训练好的模型位置
-        saver.restore(sess, './model/model.ckpt-4999')
+        saver.restore(sess, "d:/python/data/flower_model.ckpt-9999")
         for i in os.listdir(path):
             imgpath = os.path.join(path, i)
+
+            start = time.time()
+            print(imgpath)
             im = cv2.imread(imgpath)
             im = cv2.resize(im, (224, 224))  # * (1. / 255)
 
             im = np.expand_dims(im, axis=0)
             # 测试时，keep_prob设置为1.0
             pred, _score = sess.run([f_cls, score], feed_dict={x: im, keep_prob: 1.0})
+
+            end = time.time()
+            print('Total spend time to predict the image class', (end - start), "s.")
+
             prob = round(np.max(_score), 4)
             print("{} flowers class is: {}, score: {}".format(i, int(pred), prob))
 
 
 if __name__ == '__main__':
     # 测试图片保存在文件夹中了，图片前面数字为所属类别
-    path = './test'
-    test(path)
+    test(image_test_path)

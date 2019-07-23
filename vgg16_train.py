@@ -17,7 +17,7 @@ batch_size = 32
 capacity = 256
 min_after_dequeue = 240
 
-lr = 0.0001
+lr = 0.001
 n_cls = 17
 max_steps = 10000
 

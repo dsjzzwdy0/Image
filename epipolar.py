@@ -25,8 +25,8 @@ def drawlines(img1, img2, lines, pts1, pts2):
     return img1, img2
 
 
-img1 = cv.imread('images/tu6.jpg', 0)  # queryimage # left image
-img2 = cv.imread('images/tu8.jpg', 0)  # trainimage # right image
+img1 = cv.imread('images/hang0.jpg', 0)  # queryimage # left image
+img2 = cv.imread('images/hang1.jpg', 0)  # trainimage # right image
 sift = cv.xfeatures2d.SIFT_create()
 # find the keypoints and descriptors with SIFT
 kp1, des1 = sift.detectAndCompute(img1, None)
